@@ -21,3 +21,9 @@
         state: present
       tags:
         - apache
+
+    - name: "Install PHP in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      shell: amazon-linux-extras install php7.4 -y
+      tags:
+        - php
