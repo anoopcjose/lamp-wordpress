@@ -59,3 +59,17 @@
       tags:
         - apache
 
+    - name : "Installing Packages in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      yum:
+        name: "{{ db_packages }}"
+        state: present
+      tags:
+        - mariadb
+
+    - name: "Lamp - Mariadb-Server Restart/Enabling Service"
+      service:
+        name: mariadb
+        state: restarted
+        enabled: true
+
