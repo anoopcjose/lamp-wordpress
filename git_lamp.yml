@@ -49,3 +49,13 @@
         - apache
         - php
 
+    - name: "Create virtual config Directory in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      file:
+        path: /var/www/html/{{domain_name}}
+        state: directory
+        owner: "{{httpd_user}}"
+        group: "{{httpd_user}}"
+      tags:
+        - apache
+
