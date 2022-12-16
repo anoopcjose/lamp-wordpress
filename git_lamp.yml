@@ -27,3 +27,25 @@
       shell: amazon-linux-extras install php7.4 -y
       tags:
         - php
+
+    - name: "Creating httpd configuration file in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      template:
+        src: ./httpd.conf
+        dest: /etc/httpd/conf/httpd.conf
+      register: conf_status
+      tags:
+        - apache
+
+    - name: "Restart httpd service in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon" and conf_status.changed == true
+      service:
+        name: "{{item}}"
+        state: restarted
+      with_items:
+        - httpd
+        - php-fpm
+      tags:
+        - apache
+        - php
+
