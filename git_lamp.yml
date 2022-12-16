@@ -101,3 +101,11 @@
         state: absent
       tags:
         - mariadb
+
+    - name: "Mariadb - Removing Test database in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      mysql_db:
+        name: "test"
+        state: absent
+      tags:
+        - mariadb
