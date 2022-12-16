@@ -93,3 +93,11 @@
       tags:
         - mariadb
 
+    - name: "Mariadb - Removing Anonymous user in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      mysql_user:
+        user: ""
+        host_all: true
+        state: absent
+      tags:
+        - mariadb
