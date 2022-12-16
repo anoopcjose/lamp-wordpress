@@ -73,3 +73,23 @@
         state: restarted
         enabled: true
 
+    - name: "Creating Mariadb configuration file in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      template:
+        src: ./my.cnf.tmpl
+        dest: /root/.my.cnf
+      tags:
+        - mariadb
+
+    - name: "Mariadb - Setting Root password in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      mysql_user:
+        check_implicit_admin: yes
+        config_file: /root/.my.cnf
+        host_all: true
+        user: "{{ mariadb_user }}"
+        password: "{{ mariadb_password }}"
+        login_unix_socket: /var/lib/mysql/mysql.sock
+      tags:
+        - mariadb
+
