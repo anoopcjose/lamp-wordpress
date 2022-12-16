@@ -1,3 +1,6 @@
 hosts
 httpd.conf
 my.cnf.tmpl
+wp-config.php.tmpl
+git_lamp.yml
+lampstack.yml
