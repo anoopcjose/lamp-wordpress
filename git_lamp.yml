@@ -1,0 +1,23 @@
+---
+- name: "Install LAMP stack in Amazon Linux"
+  hosts: all
+  become: true
+  vars_files:
+    - lampstack.vars
+
+  tasks:
+    - name: "Update Cache in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      yum:
+        name: "*"
+        state: present
+      tags:
+        - lamp
+
+    - name : "Installing Packages in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      yum:
+        name: "{{ web_packages }}"
+        state: present
+      tags:
+        - apache
