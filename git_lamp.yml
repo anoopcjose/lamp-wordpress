@@ -109,3 +109,30 @@
         state: absent
       tags:
         - mariadb
+
+    - name: "httpd configuration file check in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      shell: apachectl -t
+      register: httpdsyntaxcheck_status
+      tags:
+        - apache
+
+    - name: "Print debug output in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
+      debug:
+        var: httpdsyntaxcheck_status
+      tags:
+        - apache
+
+    - name: "Restart httpd if syntax is okay in Amazon Linux"
+      when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon" and httpdsyntaxcheck_status.stderr == "Syntax OK" and  conf_status.changed == true
+      service:
+        name: "{{item}}"
+        state: restarted
+        enabled: true
+      with_items:
+        - httpd
+        - php-fpm.service
+        - mariadb
+      tags:
+        - lamp
