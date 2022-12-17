@@ -162,3 +162,37 @@
         remote_src: true
       tags:
         - wordpress
+
+    - name: "Wordpress - Creating wp-config.php from template"
+      template:
+        src: wp-config.php.tmpl
+        dest: "/var/www/html/{{ domain_name }}/wp-config.php"
+        owner: "{{ httpd_user }}"
+        group: "{{ httpd_user }}"
+      tags:
+        - wordpress
+
+    - name: "Post-installation restart"
+      service:
+        name: "{{ item }}"
+        state: restarted
+        enabled: true
+      with_items:
+        - "mariadb"
+        - "httpd"
+        - "php-fpm"
+      tags:
+        - lamp
+        - apache
+        - php
+        - mariadb
+
+    - name: "Post-Installation Cleanup"
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "/tmp/wordpress.tar.gz"
+        - "/tmp/wordpress/"
+      tags:
+        - wordpress   
