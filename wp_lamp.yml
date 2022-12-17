@@ -111,7 +111,20 @@
       tags:
         - mariadb
 
-    - name: "httpd configuration file check in Amazon Linux"
+    - name: "Creating WordPress Database"
+      mysql_db:
+        name: "{{ wp_database }}"
+        state: present
+
+    - name: "Lamp - Mariadb-Server Creating Extra User {{ mysql_extra_user }} "
+      mysql_user:
+        user: "{{ wp_user }}"
+        host: "%"
+        password: "{{ wp_password }}"
+        priv: '{{ wp_database }}.*:ALL'
+        state: present
+
+   - name: "httpd configuration file check in Amazon Linux"
       when: ansible_os_family == "RedHat" and ansible_distribution == "Amazon"
       shell: apachectl -t
       register: httpdsyntaxcheck_status
